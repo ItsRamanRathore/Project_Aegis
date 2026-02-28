@@ -1,0 +1,36 @@
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+env/
+.env
+
+# Databases & Logs
+*.sqlite
+*.db
+aegis_logs.db
+
+# Windows / OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Temporary and build files
+*.tmp
+*.log
+ppt_output.txt
+Secure_Logs_Honeypot/
+
+# IDE files
+.vscode/
+.idea/
+
+# JavaScript/Node (if dashboard is kept in the same repo)
+delhibreathe-dashboard/node_modules/
+delhibreathe-dashboard/dist/
+delhibreathe-dashboard/build/
+delhibreathe-dashboard/.npm/
