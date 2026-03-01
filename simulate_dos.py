@@ -1,6 +1,7 @@
 import asyncio
 import aiohttp
 import time
+import sys
 
 URL = "http://127.0.0.1:8000/api/alerts-history"
 TOTAL_REQUESTS = 150 # Should trigger the 100/min per-IP limit
@@ -10,9 +11,11 @@ async def fetch(session, i):
         async with session.get(URL) as response:
             status = response.status
             print(f"[{i}] Status: {status}")
+            sys.stdout.flush()
             return status
     except Exception as e:
         print(f"[{i}] Error: {e}")
+        sys.stdout.flush()
         return None
 
 async def main():
@@ -24,6 +27,9 @@ async def main():
         tasks = [fetch(session, i) for i in range(TOTAL_REQUESTS)]
         results = await asyncio.gather(*tasks)
         
+    await asyncio.sleep(0.5)
+    print("\n")
+    
     end_time = time.time()
     ok_count = results.count(200)
     blocked_count = results.count(429) + results.count(503)

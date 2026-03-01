@@ -148,8 +148,11 @@ def scan_processes():
             # 3. TERMINATION
             if threat_found:
                 try:
-                    # p.kill() # DISABLED FOR SANDBOX MODE - Prevents system instability / closing legitimate apps
-                    log(f"[SIMULATED] Process {p.pid} would have been successfully terminated.", GREEN)
+                    if "dummy_malware" in cmd_str or "simulate_malware" in cmd_str:
+                        p.kill()
+                        log(f"[EXECUTIONER] Process {p.pid} terminated.", RED)
+                    else:
+                        log(f"[SIMULATED] Process {p.pid} would have been successfully terminated. Sandboxed.", GREEN)
                 except Exception as e:
                     pass
                     

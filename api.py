@@ -96,6 +96,7 @@ async def check_rate_limit(request: Request) -> bool:
                         "analysis": f"DETECTED: Massive surge in HTTP requests exceeding structural capacity.\nANALYSIS: Global request rate breached {MAX_GLOBAL_REQS} req/{RATE_LIMIT_WINDOW}s window.\nRESPONSE: API placed in High Alert Mode. All unauthenticated traffic dropped to preserve backend stability."
                     }
                     asyncio.create_task(save_and_broadcast_alert(alert_data))
+                    show_onscreen_alert(alert_data["classification"], f"Target: All Unauth Endpoints\nStatus: 503 Triggered")
                 
                 print(f"[SHIELD] 🔴 Global DDoS Threshold Breached! Dropping request from {client_ip}.")
                 raise HTTPException(status_code=503, detail="Service Unavailable: High Alert Mode. System under heavy load.")
@@ -123,6 +124,7 @@ async def check_rate_limit(request: Request) -> bool:
                         "analysis": f"DETECTED: Unusually high frequency of requests from {client_ip}.\nANALYSIS: Client exceeded {MAX_REQS_PER_IP} req/{RATE_LIMIT_WINDOW}s window.\nRESPONSE: HTTP 429 Too Many Requests enforcement active. IP traffic throttled."
                     }
                     asyncio.create_task(save_and_broadcast_alert(alert_data))
+                    show_onscreen_alert(alert_data["classification"], f"Target: IP: {client_ip}\nStatus: Traffic Dropped")
                     
                 print(f"[SHIELD] 🔴 IP Rate Limit Exceeded by {client_ip}.")
                 raise HTTPException(status_code=429, detail="Too Many Requests from this IP.")

@@ -118,8 +118,8 @@ def terminate_threat(original_path=None, encrypted_path=None):
             cmdline = proc.info.get('cmdline')
             if cmdline and 'dummy_malware.py' in ' '.join(cmdline):
                 print(f"\n[EXECUTIONER] ⚡ Threat Identified! PID: {proc.info['pid']}")
-                # proc.kill() # DISABLED FOR SANDBOX MODE
-                print(f"[EXECUTIONER] 💀 [SIMULATED] Process Terminated. Shield holding tight.")
+                proc.kill()
+                print(f"[EXECUTIONER] 💀 Process Terminated. Shield holding tight.")
                 threat_killed = True
                 break
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
@@ -132,14 +132,14 @@ def terminate_threat(original_path=None, encrypted_path=None):
             time.sleep(0.5)
             try:
                 set_ignored(original_path, encrypted_path)
-                # os.rename(encrypted_path, original_path) # DISABLED FOR SANDBOX MODE
+                os.rename(encrypted_path, original_path)
                 # Update backup with restored file
                 abs_orig = os.path.abspath(original_path)
-                # with open(original_path, 'rb') as f: # DISABLED FOR SANDBOX MODE
-                #     file_backups[abs_orig] = f.read() # DISABLED FOR SANDBOX MODE
+                with open(original_path, 'rb') as f:
+                    file_backups[abs_orig] = f.read()
 
                 file_name = os.path.basename(original_path)
-                print(f"[HEALER] 🩹 [SIMULATED] Auto-Healed: {file_name}\n")
+                print(f"[HEALER] 🩹 Auto-Healed: {file_name}\n")
 
                 alert_payload = {
                     "node": "Node-01: Connaught Place",
@@ -231,8 +231,8 @@ class AegisTrapHandler(FileSystemEventHandler):
             if os.path.exists(abs_dest):
                 time.sleep(0.2)
                 set_ignored(abs_src, abs_dest)
-                # os.rename(abs_dest, abs_src) # DISABLED FOR SANDBOX MODE
-                print(f"[SHIELD] ↩️  [SIMULATED] Reverted unauthorized manual rename: '{os.path.basename(abs_src)}'.")
+                os.rename(abs_dest, abs_src)
+                print(f"[SHIELD] ↩️  Reverted unauthorized manual rename: '{os.path.basename(abs_src)}'.")
         except Exception as e:
             print(f"[SHIELD] ⚠️ Could not revert manual rename: {e}")
             
